@@ -77,15 +77,15 @@ module.exports = {
               });
              return message.channel.send({  embeds: [embed] });
             } else if (query && isCategory) {
-             const commands = client.slashCommands.filter((cmd) => cmd.category.toLowerCase() === query.toLowerCase());
+             const commands = client.commands.filter((cmd) => cmd.category.toLowerCase() === query.toLowerCase());
              const embed = new EmbedBuilder()
               .setTitle(` Available \`${query}\` commands \`(${commands.size})\``)
               .setDescription(`> ${commands.map((cmd) => `\`/${cmd.name}\``).join(", ")}`)
               .setColor(Colors.Green)
               .setTimestamp()
               .setFooter({
-               text: `Requested by ${interaction.member?.user?.username}`,
-               iconURL: interaction.member.user.displayAvatarURL({
+               text: `Requested by ${message.member?.user?.username}`,
+               iconURL: message.member.user.displayAvatarURL({
                 dynamic: true,
                 format: "png",
                 size: 2048,
