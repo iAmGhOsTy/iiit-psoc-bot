@@ -1,5 +1,6 @@
 require('dotenv').config()
 const { Client, Collection,Options,GatewayIntentBits } = require("discord.js");
+const config = require("./config.js");
 const client = new Client({
     allowedMentions: { parse: ['users', 'roles'] },
     fetchAllMembers: false,
@@ -24,14 +25,23 @@ client.commands = new Collection();
 client.slashCommands = new Collection();
 client.aliases = new Collection();
 // client.categories = readdirSync("./commands/");
-cooldowns = new Collection();
+client.cooldowns = new Collection();
 
 //SET UTILS
 client.logger = require('./src/utils/logger');
 client.color = require('./src/utils/color.js');
 
 //SET CONFIG
-client.config = require('./config');
+client.config = config;
+
+//DataBase stuff
+if (process.env.MongoURL) {
+	const connect = require("./src/database/connect.js");
+	connect(config);
+  } else {
+	console.log("No MongoURL provided, add it in the config.js file.");
+	process.exit();
+  }
 
 // LOAD THE 4 HANDLERS
 ["error", "command", "slashCommands", "event"].forEach(file => { require(`./src/utils/handlers/${file}`)(client) })
