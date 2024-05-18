@@ -9,7 +9,7 @@ module.exports = async (client) => {
                 file.forEach(f => {
                     const props = require(`${__dirname}/../../command/${dir}/${f}`);
                     client.commands.set(props.name, props);
-                    props.aliases.forEach(alias => {
+                    props.aliases?.forEach(alias => {
                         client.aliases.set(alias, props.name);
                     });
                 });
