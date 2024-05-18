@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
+const { chalkcolor } = require('../utils/color')
+
+
 
 module.exports = (config) => {
     mongoose.set("strictQuery", true);
@@ -7,10 +10,11 @@ module.exports = (config) => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
-        console.log("Connected to the database!");
+        console.log(chalkcolor.green("Connected to the database!"));
+
     }
     ).catch((err) => {
-        console.log("Unable to connect to the database!", err);
+        console.log(chalkcolor.red("Unable to connect to the database!", err));
     }
     )
 }
