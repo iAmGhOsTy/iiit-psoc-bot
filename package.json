@@ -6,6 +6,10 @@
   "scripts": {
     "test": "node index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iAmGhOsTy/iiit-psoc-bot.git"
+  },
   "author": "not.ghosty",
   "license": "ISC",
   "dependencies": {
@@ -13,6 +17,7 @@
     "discord.js": "^14.11.0",
     "dotenv": "^16.4.5",
     "fs": "0.0.1-security",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "mongoose": "^7.6.11"
   }
 }
