@@ -1,4 +1,4 @@
-const { Collection } = require("discord.js");
+const { Collection, PermissionsBitField  } = require("discord.js");
 const StickyMessage = require('../database/schemas/stickyMessage');
 
 module.exports = async (client, message) => {
@@ -71,8 +71,14 @@ module.exports = async (client, message) => {
 
     // Permission checker
     if (props.permissions) {
-        if (!message.member.permissions.has(props.permissions)) {
-            return message.reply(`You're missing permissions: ${props.permissions.map(p => `**${p}**`).join(', ')}`);
+        
+        const combinedPermissions = new PermissionsBitField(props.permissions.reduce((acc, perm) => acc | perm, 0n));
+    
+        
+        if (!message.member.permissions.has(combinedPermissions)) {
+            const missingPermissions = combinedPermissions.toArray().filter(permission => !message.member.permissions.has(permission)).map(permission => permission);
+    
+            return message.reply(`You're missing permissions: ${missingPermissions.map(p => `**${p}**`).join(', ')}`);
         }
     }
 
