@@ -11,6 +11,7 @@ module.exports = async (client, message) => {
     }
 
     if (!message.content.startsWith(prefix)) {
+
         // Handle sticky message logic
         const stickyMessages = await StickyMessage.find({ channelId: message.channel.id });
 
@@ -20,17 +21,17 @@ module.exports = async (client, message) => {
             try {
                 const channel = await client.channels.fetch(sticky.channelId);
                 
-                // Fetch the old message and delete it after a delay
+               
                 const oldMessage = await channel.messages.fetch(sticky.lastStickyMessageId);
                 setTimeout(async () => {
                     await oldMessage.delete();
-                }, 1000); // Delay in milliseconds
+                }, 1000); 
 
-                // Send the new sticky message after a delay
+               
                 setTimeout(async () => {
                     const newMessage = await channel.send(sticky.content);
                     await StickyMessage.updateOne({ _id: sticky._id }, { lastStickyMessageId: newMessage.id });
-                }, 2000); // Delay in milliseconds 
+                }, 2000); 
             } catch (error) {
                 console.error(`Failed to re-post sticky message: ${error}`);
             }
@@ -48,6 +49,7 @@ module.exports = async (client, message) => {
         cmd = client.commands.get(client.aliases.get(command));
     }
     if (!cmd) return;
+
 
     const props = require(`../command/${cmd.category}/${cmd.name}`);
 
@@ -71,17 +73,32 @@ module.exports = async (client, message) => {
 
     // Permission checker
     if (props.permissions) {
-        
         const combinedPermissions = new PermissionsBitField(props.permissions.reduce((acc, perm) => acc | perm, 0n));
-    
         
         if (!message.member.permissions.has(combinedPermissions)) {
             const missingPermissions = combinedPermissions.toArray().filter(permission => !message.member.permissions.has(permission)).map(permission => permission);
-    
             return message.reply(`You're missing permissions: ${missingPermissions.map(p => `**${p}**`).join(', ')}`);
         }
     }
 
+    if (props.args && !args.length) {
+        return message.channel.send(`You didn't provide any arguments.`);
+      }
+
+    //muscic logic 
+    if (props.inVc && !memberChannel) {
+        return message.channel.send(
+          'You must be in a Voice Channel to use this Command!',
+        );
+      }
+    
+
     // Loading commands
-    cmd.run(client, message, args).catch(err => client.emit("error", err, message));
+    try {
+        await cmd.run(client, message, args); 
+    
+    } catch (err) {
+        console.error("Error executing command:", err);
+        client.emit("error", err, message);
+    }
 };

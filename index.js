@@ -1,6 +1,7 @@
 require('dotenv').config()
 const { Client, Collection,Options,GatewayIntentBits } = require("discord.js");
 const config = require("./config.js");
+const { Queue, ShoukakuClient } = require("./src/structures/Exports.js");
 const client = new Client({
     allowedMentions: { parse: ['users', 'roles'] },
     fetchAllMembers: false,
@@ -33,6 +34,10 @@ client.color = require('./src/utils/color.js');
 
 //SET CONFIG
 client.config = config;
+
+//MUSIC STUFF
+client.queue = new Queue(client);
+client.shoukaku = new ShoukakuClient(client)
 
 //DataBase stuff
 if (process.env.MongoURL) {
