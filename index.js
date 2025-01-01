@@ -4,7 +4,7 @@ const config = require("./config.js");
 const { Queue, ShoukakuClient } = require("./src/structures/Exports.js");
 const client = new Client({
     allowedMentions: { parse: ['users', 'roles'] },
-    fetchAllMembers: false,
+    fetchAllMembers: true,
     intents: Object.keys(GatewayIntentBits).map((a)=>{
 		return GatewayIntentBits[a]
 	  }),
